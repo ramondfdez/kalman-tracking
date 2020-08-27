@@ -113,7 +113,7 @@ min_distance = 50
 tracker = Tracker(150, 30, 5)
 skip_frame_count = 0
 
-video_in = "videos/" + args["input"]
+video_in = "videos/" + str(args["input"])
 video_out = "output/" + video_in.replace(".mp4", "_out.avi")
 class_detected = 'person' # Detectaremos solo personas
 
