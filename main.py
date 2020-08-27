@@ -19,7 +19,7 @@ import coco
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--input", required=True, help="path to input image")
-args = parser.parse_args()
+args = vars(parser.parse_args())
 
 
 # Directorio de logs
