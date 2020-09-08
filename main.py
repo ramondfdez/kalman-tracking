@@ -38,7 +38,7 @@ class InferenceConfig(coco.CocoConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
     # Skip detections with < 95% confidence
-    DETECTION_MIN_CONFIDENCE = 0.7
+    DETECTION_MIN_CONFIDENCE = 0.95
 
 config = InferenceConfig()
 
@@ -103,7 +103,7 @@ def centros(boxes):
     (y1, x1, y2, x2) = boxes[i]
     x = int(round((x1 + x2)/2.0))
     y = int(round((y1 + y2)/2.0))
-    centro = np.array([x,y])
+    centro = np.array([y,x])
     centers.append(centro)
   return np.array(centers)
   
@@ -164,19 +164,18 @@ while True:
 
         try:
           c1, c2 = centers[j]
-          y1, x1, y2, x2 = personas[j]
-          d1 = abs(y1-c2)
-          d2 = abs(x1-c1)
           #cv2.circle(frame,(c1,c2), 6, (0,0,0),-1)
         except:
           pass
-
+        y1, x1, y2, x2 = personas[j]
+        d1 = abs(y1-c1)
+        d2 = abs(x1-c2)
         if (len(tracker.tracks[j].trace) > 1):
 
           x = int(tracker.tracks[j].trace[-1][0,0])
           y = int(tracker.tracks[j].trace[-1][0,1])
-          tl = (x-10,y-10)
-          br = (x+10,y+10)
+          tl = (x-d2,y-d1)
+          br = (x+d2,y+d1)
           cv2.rectangle(frame,tl,br,colors[j],2)
           cv2.putText(frame,"Persona: " + str(tracker.tracks[j].trackId+1), (x1,y2),cv2.FONT_HERSHEY_SIMPLEX, 0.6, colors[j],2)
           cv2.circle(frame,(x,y), 1, colors[j],2)
