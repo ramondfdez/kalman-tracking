@@ -164,10 +164,11 @@ while True:
 
         try:
           c1, c2 = centers[j]
+          y1, x1, y2, x2 = personas[j]
           #cv2.circle(frame,(c1,c2), 6, (0,0,0),-1)
         except:
           pass
-        y1, x1, y2, x2 = personas[j]
+
         d1 = abs(y1-c1)
         d2 = abs(x1-c2)
         if (len(tracker.tracks[j].trace) > 1):
