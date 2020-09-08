@@ -38,7 +38,7 @@ class InferenceConfig(coco.CocoConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
     # Skip detections with < 95% confidence
-    DETECTION_MIN_CONFIDENCE = 0.95
+    DETECTION_MIN_CONFIDENCE = 0.7
 
 config = InferenceConfig()
 
@@ -109,8 +109,7 @@ def centros(boxes):
   
 # Variables previas
 writer = None
-min_distance = 150
-tracker = Tracker(min_distance, 30, 5)
+tracker = Tracker(150, 30, 5)
 skip_frame_count = 0
 
 input = str(args["input"])
@@ -176,8 +175,8 @@ while True:
 
           x = int(tracker.tracks[j].trace[-1][0,0])
           y = int(tracker.tracks[j].trace[-1][0,1])
-          tl = (x-d2,y-d1)
-          br = (x+d2,y+d1)
+          tl = (x-10,y-10)
+          br = (x+10,y+10)
           cv2.rectangle(frame,tl,br,colors[j],2)
           cv2.putText(frame,"Persona: " + str(tracker.tracks[j].trackId+1), (x1,y2),cv2.FONT_HERSHEY_SIMPLEX, 0.6, colors[j],2)
           cv2.circle(frame,(x,y), 1, colors[j],2)
