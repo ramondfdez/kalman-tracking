@@ -110,7 +110,7 @@ def centros(boxes):
 # Variables previas
 writer = None
 min_distance = 150
-tracker = Tracker(min_distance, 50, 5)
+tracker = Tracker(min_distance, 30, 5)
 skip_frame_count = 0
 
 input = str(args["input"])
