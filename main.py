@@ -103,7 +103,7 @@ def centros(boxes):
     (y1, x1, y2, x2) = boxes[i]
     x = int(round((x1 + x2)/2.0))
     y = int(round((y1 + y2)/2.0))
-    centro = np.array([y,x])
+    centro = np.array([x,y])
     centers.append(centro)
   return np.array(centers)
   
@@ -165,8 +165,8 @@ while True:
         try:
           c1, c2 = centers[j]
           y1, x1, y2, x2 = personas[j]            
-          d1 = abs(y1-c1)
-          d2 = abs(x1-c2)
+          d1 = abs(y1-c2)
+          d2 = abs(x1-c1)
           #cv2.circle(frame,(c1,c2), 6, (0,0,0),-1)
         except:
           pass
