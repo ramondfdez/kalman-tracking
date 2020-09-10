@@ -38,7 +38,7 @@ class InferenceConfig(coco.CocoConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
     # Skip detections with < 95% confidence
-    DETECTION_MIN_CONFIDENCE = 0.95
+    DETECTION_MIN_CONFIDENCE = 0.9
 
 config = InferenceConfig()
 
@@ -76,7 +76,7 @@ def detecta_personas(boxes, masks, ids, scores, class_detected):
   personas = []
   masks_personas = []
   scores_personas = []
-  n_instances = len(boxes)
+  n_instances = boxes.shape[0]
 
   if not n_instances:
     print('NO INSTANCES TO DISPLAY')
