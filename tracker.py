@@ -4,49 +4,67 @@ from scipy.optimize import linear_sum_assignment
 from collections import deque
 
 
-class Tracks(object):
-	"""docstring for Tracks"""
+class Track(object):
+	"""Track class for every object to be tracked"""
+	
 	def __init__(self, detection, trackId):
-		super(Tracks, self).__init__()
+		self.trackId = trackId		
 		self.KF = KalmanFilter()
-		self.KF.predict()
-		self.KF.correct(np.matrix(detection).reshape(2,1))
-		self.trace = deque(maxlen=20)
-		self.prediction = detection.reshape(1,2)
-		self.trackId = trackId
-		self.skipped_frames = 0
-
-	def predict(self,detection):
-		self.prediction = np.array(self.KF.predict()).reshape(1,2)
-		self.KF.correct(np.matrix(detection).reshape(2,1))
-
+		self.prediction = np.asarray(prediction)
+		self.skipped_frames = 0  # number of frames skipped undetected
+		self.trace = []  # trace path
 
 class Tracker(object):
-	"""docstring for Tracker"""
-	def __init__(self, dist_threshold, max_frame_skipped, max_trace_length):
+	"""Tracker class that updates track vectors of object tracked"""
+	
+	def __init__(self, dist_threshold, max_frame_skipped, max_trace_length, trackId):
 		super(Tracker, self).__init__()
 		self.dist_threshold = dist_threshold
 		self.max_frame_skipped = max_frame_skipped
 		self.max_trace_length = max_trace_length
-		self.trackId = 0
+		self.trackId = trackId
 		self.tracks = []
 
 	def update(self, detections):
+		"""Update tracks vector using following steps:
+		    - Create tracks if no tracks vector found
+		    - Calculate cost using sum of square distance
+		      between predicted vs detected centroids
+		    - Using Hungarian Algorithm assign the correct
+		      detected measurements to predicted tracks
+		      https://en.wikipedia.org/wiki/Hungarian_algorithm
+		    - Identify tracks with no assignment, if any
+		    - If tracks are not detected for long time, remove them
+		    - Now look for un_assigned detects
+		    - Start new tracks
+		    - Update KalmanFilter state, lastResults and tracks trace """
+
+		
+		# Create tracks if no tracks vector found
 		if len(self.tracks) == 0:
-			for i in range(detections.shape[0]):
+			for i in range(len(detections)):
 				track = Tracks(detections[i], self.trackId)
 				self.trackId +=1
 				self.tracks.append(track)
-
+				
+		# Calculate cost using sum of square distance between
+		# predicted vs detected centroids
 		N = len(self.tracks)
 		M = len(detections)
-		cost = []
+		cost =  np.zeros(shape=(N, M))
 		for i in range(N):
-			diff = np.linalg.norm(self.tracks[i].prediction - detections.reshape(-1,2), axis=1)
-			cost.append(diff)
+			for j in range(M):
+				try:
+					diff = self.tracks[i].prediction - detections[j]
+					distance = np.sqrt(diff[0][0]*diff[0][0] + diff[1][0]*diff[1][0])
+					cost[i][j] = distance
+				except:
+					pass
 
 		cost = np.array(cost)*0.5
-
+		
+		# Using Hungarian Algorithm assign the correct detected measurements
+		# to predicted tracks
 		assignment = []
 		for _ in range(N):
 			assignment.append(-1)
@@ -54,11 +72,12 @@ class Tracker(object):
 		row, col = linear_sum_assignment(cost)
 		for i in range(len(row)):
 			assignment[row[i]] = col[i]
-
+			
+        	# Identify tracks with no assignment, if any
 		un_assigned_tracks = []
 
 		for i in range(len(assignment)):
-			if assignment[i] != -1:
+			if (assignment[i] != -1):
 				if (cost[i][assignment[i]] > self.dist_threshold):
 					assignment[i] = -1
 					un_assigned_tracks.append(i)
@@ -73,24 +92,46 @@ class Tracker(object):
 
 		if len(del_tracks) > 0:
 			for i in range(len(del_tracks)):
-				del self.tracks[i]
-				del assignment[i]
+				if i < len(self.tracks):
+					del self.tracks[i]
+					del assignment[i]
+				else:
+					print("ERROR: id is greater than length of tracks")
 				
 		# Now look for un_assigned detects
 		un_assigned_detects = []
 		for i in range(len(detections)):
 			if i not in assignment:
-				#un_assigned_detects.append(i)
-				track = Tracks(detections[i], self.trackId)
-				self.trackId +=1
+				un_assigned_detects.append(i)
+				
+		# Start new tracks
+		if(len(un_assigned_detects) != 0):
+			for i in range(len(un_assigned_detects)):
+				track = Track(detections[un_assigned_detects[i]], self.trackId)
+				self.trackId += 1
 				self.tracks.append(track)
 				
 
+		# Update KalmanFilter state, lastResults and tracks trace
 		for i in range(len(assignment)):
-			if(assignment[i] != -1):
-				self.tracks[i].skipped_frames = 0
-				self.tracks[i].predict(detections[assignment[i]])
-			self.tracks[i].trace.append(self.tracks[i].prediction)
+		    self.tracks[i].KF.predict()
+
+		    if(assignment[i] != -1):
+			self.tracks[i].skipped_frames = 0
+			self.tracks[i].prediction = self.tracks[i].KF.correct(
+						    detections[assignment[i]], 1)
+		    else:
+			self.tracks[i].prediction = self.tracks[i].KF.correct(
+						    np.array([[0], [0]]), 0)
+
+		    if(len(self.tracks[i].trace) > self.max_trace_length):
+			for j in range(len(self.tracks[i].trace) -
+				       self.max_trace_length):
+			    del self.tracks[i].trace[j]
+
+		    self.tracks[i].trace.append(self.tracks[i].prediction)
+		    self.tracks[i].KF.lastResult = self.tracks[i].prediction
+
 
 
 
