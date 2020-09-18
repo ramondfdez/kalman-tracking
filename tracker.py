@@ -82,11 +82,10 @@ class Tracker(object):
 				#self.tracks.append(track)
 		# Start new tracks
 		if(len(un_assigned_detects) != 0):
-		    for i in range(len(un_assigned_detects)):
-			track = Track(detections[un_assigned_detects[i]],
-				      self.trackIdCount)
-			self.trackIdCount += 1
-			self.tracks.append(track)
+			for i in range(len(un_assigned_detects)):
+				track = Track(detections[un_assigned_detects[i]], self.trackIdCount)
+				self.trackIdCount += 1
+				self.tracks.append(track)
 				
 
 		for i in range(len(assignment)):
