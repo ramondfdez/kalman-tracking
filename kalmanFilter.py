@@ -9,7 +9,8 @@ except Exception as e:
 
 
 class KalmanFilter(object):
-	"""docstring for KalmanFilter"""
+	"""Kalman Filter class keeps track of the estimated state of
+   	 the system and the variance or uncertainty of the estimate."""
 
 	def __init__(self, dt=1,stateVariance=1,measurementVariance=1, 
 														method="Velocity" ):
