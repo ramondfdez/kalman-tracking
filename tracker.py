@@ -58,9 +58,10 @@ class Tracker(object):
 				if (cost[i][assignment[i]] > self.dist_threshold):
 					assignment[i] = -1
 					un_assigned_tracks.append(i)
-				else:
-					self.tracks[i].skipped_frames +=1
-
+			else:
+				self.tracks[i].skipped_frames += 1
+				
+		# If tracks are not detected for long time, remove them
 		del_tracks = []
 		for i in range(len(self.tracks)):
 			if self.tracks[i].skipped_frames > self.max_frame_skipped :
@@ -70,13 +71,23 @@ class Tracker(object):
 			for i in range(len(del_tracks)):
 				del self.tracks[i]
 				del assignment[i]
-
+				
+		# Now look for un_assigned detects
+		un_assigned_detects = []
 		for i in range(len(detections)):
 			if i not in assignment:
-				track = Tracks(detections[i], self.trackId)
-				self.trackId +=1
-				self.tracks.append(track)
-
+				un_assigned_detects.append(i)
+				#track = Tracks(detections[i], self.trackId)
+				#self.trackId +=1
+				#self.tracks.append(track)
+		# Start new tracks
+		if(len(un_assigned_detects) != 0):
+		    for i in range(len(un_assigned_detects)):
+			track = Track(detections[un_assigned_detects[i]],
+				      self.trackIdCount)
+			self.trackIdCount += 1
+			self.tracks.append(track)
+				
 
 		for i in range(len(assignment)):
 			if(assignment[i] != -1):
