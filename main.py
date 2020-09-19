@@ -178,7 +178,7 @@ while True:
                         y1 = tracker.tracks[i].trace[j][1][0]
                         x2 = tracker.tracks[i].trace[j+1][0][0]
                         y2 = tracker.tracks[i].trace[j+1][1][0]
-                        clr = tracker.tracks[i].track_id % 9
+                        clr = tracker.tracks[i].trackId % 9
                         cv2.line(frame, (int(x1), int(y1)), (int(x2), int(y2)),
                                  colors[clr], 2)
 
