@@ -10,7 +10,7 @@ class Track(object):
 	def __init__(self, detection, trackId):
 		self.trackId = trackId		
 		self.KF = KalmanFilter()
-		self.prediction = np.asarray(prediction)
+		self.prediction = np.asarray(detection)
 		self.skipped_frames = 0  # number of frames skipped undetected
 		self.trace = []  # trace path
 
