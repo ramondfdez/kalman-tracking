@@ -38,7 +38,7 @@ class InferenceConfig(coco.CocoConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
     # Skip detections with < 95% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9
+    DETECTION_MIN_CONFIDENCE = 0.95
 
 config = InferenceConfig()
 
@@ -109,7 +109,7 @@ def centros(boxes):
   
 # Variables previas
 writer = None
-tracker = Tracker(150, 30, 5)
+tracker = Tracker(150, 8, 5)
 skip_frame_count = 0
 
 input = str(args["input"])
