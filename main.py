@@ -162,14 +162,14 @@ while True:
 
       for i in range(len(tracker.tracks)):
 
-        try:
-          c1, c2 = centers[i]
-          y1, x1, y2, x2 = personas[i]            
-          d1 = abs(y1-c2)
-          d2 = abs(x1-c1)
+        #try:
+          #c1, c2 = centers[i]
+          #y1, x1, y2, x2 = personas[i]            
+          #d1 = abs(y1-c2)
+          #d2 = abs(x1-c1)
           #cv2.circle(frame,(c1,c2), 6, (0,0,0),-1)
-        except:
-          pass
+        #except:
+        #  pass
 
         if (len(tracker.tracks[i].trace) > 1):
             for j in range(len(tracker.tracks[i].trace)-1):
