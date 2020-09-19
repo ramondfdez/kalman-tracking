@@ -109,7 +109,7 @@ def centros(boxes):
   
 # Variables previas
 writer = None
-tracker = Tracker(100, 8, 15, 100)
+tracker = Tracker(160, 30, 5, 100)
 skip_frame_count = 0
 
 input = str(args["input"])
@@ -172,14 +172,23 @@ while True:
           pass
 
         if (len(tracker.tracks[j].trace) > 1):
+            for j in range(len(tracker.tracks[i].trace)-1):
+                        # Draw trace line
+                        x1 = tracker.tracks[i].trace[j][0][0]
+                        y1 = tracker.tracks[i].trace[j][1][0]
+                        x2 = tracker.tracks[i].trace[j+1][0][0]
+                        y2 = tracker.tracks[i].trace[j+1][1][0]
+                        clr = tracker.tracks[i].track_id % 9
+                        cv2.line(frame, (int(x1), int(y1)), (int(x2), int(y2)),
+                                 colors[clr], 2)
 
-          x = int(tracker.tracks[j].trace[-1][0,0])
-          y = int(tracker.tracks[j].trace[-1][0,1])
-          tl = (x-d2,y-d1)
-          br = (x+d2,y+d1)
-          cv2.rectangle(frame,tl,br,colors[j],2)
-          cv2.putText(frame,"Persona: " + str(tracker.tracks[j].trackId+1), (x-d2,y+d1),cv2.FONT_HERSHEY_SIMPLEX, 0.6, colors[j],2)
-          cv2.circle(frame,(x,y), 1, colors[j],2)
+          #x = int(tracker.tracks[j].trace[-1][0,0])
+          #y = int(tracker.tracks[j].trace[-1][0,1])
+          #tl = (x-d2,y-d1)
+          #br = (x+d2,y+d1)
+          #cv2.rectangle(frame,tl,br,colors[j],2)
+          #cv2.putText(frame,"Persona: " + str(tracker.tracks[j].trackId+1), (x-d2,y+d1),cv2.FONT_HERSHEY_SIMPLEX, 0.6, colors[j],2)
+          #cv2.circle(frame,(x,y), 1, colors[j],2)
 
       end = time.time() # Ponemos en marcha timer
 
