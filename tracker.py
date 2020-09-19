@@ -11,7 +11,7 @@ class Tracks(object):
 		self.KF = KalmanFilter()
 		self.KF.predict()
 		self.KF.correct(np.matrix(detection).reshape(2,1))
-		self.trace = deque(maxlen=20)
+		self.trace = []
 		self.prediction = detection.reshape(1,2)
 		self.trackId = trackId
 		self.skipped_frames = 0
