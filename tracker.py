@@ -1,7 +1,6 @@
 import numpy as np 
 from kalmanFilter import KalmanFilter
 from scipy.optimize import linear_sum_assignment
-from collections import deque
 
 
 class Track(object):
@@ -18,7 +17,6 @@ class Tracker(object):
 	"""Tracker class that updates track vectors of object tracked"""
 	
 	def __init__(self, dist_threshold, max_frame_skipped, max_trace_length, trackId):
-		super(Tracker, self).__init__()
 		self.dist_threshold = dist_threshold
 		self.max_frame_skipped = max_frame_skipped
 		self.max_trace_length = max_trace_length
@@ -61,7 +59,7 @@ class Tracker(object):
 				except:
 					pass
 
-		cost = np.array(cost)*0.5
+		cost = (0.5) * cost
 		
 		# Using Hungarian Algorithm assign the correct detected measurements
 		# to predicted tracks
@@ -91,7 +89,7 @@ class Tracker(object):
 				del_tracks.append(i)
 
 		if len(del_tracks) > 0:
-			for i in range(len(del_tracks)):
+			for i in del_tracks:
 				if i < len(self.tracks):
 					del self.tracks[i]
 					del assignment[i]
