@@ -38,7 +38,7 @@ class InferenceConfig(coco.CocoConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
     # Skip detections with < 95% confidence
-    DETECTION_MIN_CONFIDENCE = 0.95
+    DETECTION_MIN_CONFIDENCE = 0.9
 
 config = InferenceConfig()
 
@@ -109,7 +109,7 @@ def centros(boxes):
   
 # Variables previas
 writer = None
-tracker = Tracker(160, 30, 5, 100)
+tracker = Tracker(150, 30, 5)
 skip_frame_count = 0
 
 input = str(args["input"])
@@ -160,35 +160,26 @@ while True:
 
       tracker.update(centers)
 
-      for i in range(len(tracker.tracks)):
+      for j in range(len(tracker.tracks)):
 
-        #try:
-          #c1, c2 = centers[i]
-          #y1, x1, y2, x2 = personas[i]            
-          #d1 = abs(y1-c2)
-          #d2 = abs(x1-c1)
+        try:
+          c1, c2 = centers[j]
+          y1, x1, y2, x2 = personas[j]            
+          d1 = abs(y1-c2)
+          d2 = abs(x1-c1)
           #cv2.circle(frame,(c1,c2), 6, (0,0,0),-1)
-        #except:
-        #  pass
+        except:
+          pass
 
-        if (len(tracker.tracks[i].trace) > 1):
-            for j in range(len(tracker.tracks[i].trace)-1):
-                        # Draw trace line
-                        x1 = tracker.tracks[i].trace[j][0][0]
-                        y1 = tracker.tracks[i].trace[j][1][0]
-                        x2 = tracker.tracks[i].trace[j+1][0][0]
-                        y2 = tracker.tracks[i].trace[j+1][1][0]
-                        clr = tracker.tracks[i].trackId % 9
-                        cv2.line(frame, (int(x1), int(y1)), (int(x2), int(y2)),
-                                 colors[clr], 2)
+        if (len(tracker.tracks[j].trace) > 1):
 
-          #x = int(tracker.tracks[j].trace[-1][0,0])
-          #y = int(tracker.tracks[j].trace[-1][0,1])
-          #tl = (x-d2,y-d1)
-          #br = (x+d2,y+d1)
-          #cv2.rectangle(frame,tl,br,colors[j],2)
-          #cv2.putText(frame,"Persona: " + str(tracker.tracks[j].trackId+1), (x-d2,y+d1),cv2.FONT_HERSHEY_SIMPLEX, 0.6, colors[j],2)
-          #cv2.circle(frame,(x,y), 1, colors[j],2)
+          x = int(tracker.tracks[j].trace[-1][0,0])
+          y = int(tracker.tracks[j].trace[-1][0,1])
+          tl = (x-d2,y-d1)
+          br = (x+d2,y+d1)
+          cv2.rectangle(frame,tl,br,colors[j],2)
+          cv2.putText(frame,"Persona: " + str(tracker.tracks[j].trackId+1), (x-d2,y+d1),cv2.FONT_HERSHEY_SIMPLEX, 0.6, colors[j],2)
+          cv2.circle(frame,(x,y), 1, colors[j],2)
 
       end = time.time() # Ponemos en marcha timer
 
