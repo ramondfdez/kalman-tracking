@@ -43,7 +43,7 @@ class Tracker(object):
 		# Create tracks if no tracks vector found
 		if len(self.tracks) == 0:
 			for i in range(len(detections)):
-				track = Tracks(detections[i], self.trackId)
+				track = Track(detections[i], self.trackId)
 				self.trackId +=1
 				self.tracks.append(track)
 				
