@@ -120,7 +120,7 @@ class Tracker(object):
 			    if(assignment[i] != -1):
 				self.tracks[i].skipped_frames = 0
 				self.tracks[i].prediction = self.tracks[i].KF.correct(detections[assignment[i]], 1)
-						
+				
 			    else:
 				self.tracks[i].prediction = self.tracks[i].KF.correct(np.array([[0], [0]]), 0)
 
