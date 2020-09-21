@@ -45,7 +45,7 @@ class Tracker(object):
 			diff = np.linalg.norm(self.tracks[i].prediction - detections.reshape(-1,2), axis=1)
 			cost.append(diff)
 
-		cost = np.array(cost)*0.1
+		cost = np.array(cost)*0.5
 		row, col = linear_sum_assignment(cost)
 		assignment = [-1]*N
 		for i in range(len(row)):
@@ -58,6 +58,7 @@ class Tracker(object):
 				if (cost[i][assignment[i]] > self.dist_threshold):
 					assignment[i] = -1
 					un_assigned_tracks.append(i)
+				pass
 			else:
 				self.tracks[i].skipped_frames +=1
 
@@ -71,6 +72,7 @@ class Tracker(object):
 				del self.tracks[i]
 				del assignment[i]
 
+		# Update KalmanFilter state, lastResults and tracks trace
 		for i in range(len(detections)):
 			if i not in assignment:
 				track = Tracks(detections[i], self.trackId)
