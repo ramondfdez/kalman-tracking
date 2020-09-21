@@ -68,10 +68,13 @@ class Tracker(object):
 			if self.tracks[i].skipped_frames > self.max_frame_skipped :
 				del_tracks.append(i)
 
-		if len(del_tracks) > 0:
-			for i in range(len(del_tracks)):
-				del self.tracks[i]
-				del assignment[i]
+		if len(del_tracks) > 0: # only when skipped frame exceeds max
+			for id in del_tracks:
+				if id < len(self.tracks):
+					del self.tracks[id]
+					del assignment[id]
+				else:
+					pass
 
 		# Update KalmanFilter state, lastResults and tracks trace
 		for i in range(len(detections)):
