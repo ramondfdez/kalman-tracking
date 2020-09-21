@@ -58,8 +58,8 @@ class Tracker(object):
 				if (cost[i][assignment[i]] > self.dist_threshold):
 					assignment[i] = -1
 					un_assigned_tracks.append(i)
-				else:
-					self.tracks[i].skipped_frames +=1
+			else:
+				self.tracks[i].skipped_frames +=1
 
 		del_tracks = []
 		for i in range(len(self.tracks)):
