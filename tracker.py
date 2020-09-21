@@ -1,7 +1,6 @@
 import numpy as np 
 from kalmanFilter import KalmanFilter
 from scipy.optimize import linear_sum_assignment
-from collections import deque
 
 
 class Tracks(object):
@@ -11,7 +10,7 @@ class Tracks(object):
 		self.KF = KalmanFilter()
 		self.KF.predict()
 		self.KF.correct(np.matrix(detection).reshape(2,1))
-		self.trace = []
+		self.trace = deque(maxlen=20)
 		self.prediction = detection.reshape(1,2)
 		self.trackId = trackId
 		self.skipped_frames = 0
@@ -45,7 +44,7 @@ class Tracker(object):
 			diff = np.linalg.norm(self.tracks[i].prediction - detections.reshape(-1,2), axis=1)
 			cost.append(diff)
 
-		cost = np.array(cost)*0.1
+		#cost = np.array(cost)*0.1
 		row, col = linear_sum_assignment(cost)
 		assignment = [-1]*N
 		for i in range(len(row)):
