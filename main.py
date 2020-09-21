@@ -109,7 +109,7 @@ def centros(boxes):
   
 # Variables previas
 writer = None
-tracker = Tracker(150, 100, 5)
+tracker = Tracker(150, 30, 5)
 
 input = str(args["input"])
 video_in = "videos/" + input
