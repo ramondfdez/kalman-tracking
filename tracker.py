@@ -45,7 +45,7 @@ class Tracker(object):
 			diff = np.linalg.norm(self.tracks[i].prediction - detections.reshape(-1,2), axis=1)
 			cost.append(diff)
 
-		cost = np.array(cost)*0.5
+		cost = np.array(cost)*0.1
 		row, col = linear_sum_assignment(cost)
 		assignment = [-1]*N
 		for i in range(len(row)):
