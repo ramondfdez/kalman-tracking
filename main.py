@@ -177,7 +177,7 @@ while True:
           tl = (x-d2,y-d1)
           br = (x+d2,y+d1)
           id = (tracker.tracks[j].trackId)+1
-          cv2.rectangle(frame,tl,br,colors[j],2)
+          cv2.rectangle(frame,tl,br,colors[id],2)
           cv2.putText(frame,"Persona: " + str(id), (x-d2,y+d1),cv2.FONT_HERSHEY_SIMPLEX, 0.6, colors[id],2)
           cv2.circle(frame,(x,y), 1, colors[id],2)
 
