@@ -192,7 +192,7 @@ while True:
       print("[INFO] Tiempo que ha tardado el frame: {:.4f} s".format(elap))
       print("[INFO] Tiempo estimado: {:.4f}".format(elap * total))
 
-  writer.write(frame) # Escribimos en el disco
+    writer.write(frame) # Escribimos en el disco
 
   else:
     break
