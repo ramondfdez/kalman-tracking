@@ -191,10 +191,14 @@ while True:
             elap = (end - start)
             print("[INFO] Tiempo que ha tardado el frame: {:.4f} s".format(elap))
             print("[INFO] Tiempo estimado: {:.4f}".format(elap * total))
-   
+    else:
+      if writer is None:
+            # Escribimos en el video de salida
+            fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+            writer = cv2.VideoWriter(video_out, fourcc, fps, (frame.shape[1], frame.shape[0]), True)
 
 
-    writer.write(frame) # Escribimos en el disco
+      writer.write(frame) # Escribimos en el disco
 
   else:
     break
