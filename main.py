@@ -188,6 +188,7 @@ while True:
       fourcc = cv2.VideoWriter_fourcc(*"MJPG")
       writer = cv2.VideoWriter(video_out, fourcc, fps, (frame.shape[1], frame.shape[0]), True)
     if total > 0:
+      end = time.time() # Ponemos en marcha timer
       elap = (end - start)
       print("[INFO] Tiempo que ha tardado el frame: {:.4f} s".format(elap))
       print("[INFO] Tiempo estimado: {:.4f}".format(elap * total))
