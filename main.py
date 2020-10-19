@@ -37,7 +37,7 @@ class InferenceConfig(coco.CocoConfig):
     # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
-    # Skip detections with < 95% confidence
+    # Skip detections with < 90% confidence
     DETECTION_MIN_CONFIDENCE = 0.9
 
 config = InferenceConfig()
@@ -194,7 +194,7 @@ while True:
    
 
 
-      writer.write(frame) # Escribimos en el disco
+    writer.write(frame) # Escribimos en el disco
 
   else:
     break
